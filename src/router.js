@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import Home from './views/Home.vue'
 import SignUp from './components/SignUp.vue'
+import SignIn from './components/SignIn.vue'
+import Profile from './components/Profile.vue'
 
 Vue.use(Router)
 
@@ -11,13 +14,19 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
       component: Home
     },
     {
       path: '/signup',
-      name: 'signUp',
       component: SignUp
-    }
+    },
+    {
+      path: '/signin',
+      component: SignIn
+    },
+    {
+      path: '/profile',
+      component: Profile
+    },
   ]
 })
