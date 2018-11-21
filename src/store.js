@@ -42,7 +42,7 @@ export default new Vuex.Store({
     actions: {
         signUp({ commit }, userData) {
             // регистрация нового пользователя
-            authentication.post('signupNewUser?key=' + API_KEY, { email: userData.email, password: userData.password, returnSecureToken: true })
+            return new Promise ((resolve, reject) => {authentication.post('signupNewUser?key=' + API_KEY, { email: userData.email, password: userData.password, returnSecureToken: true })
                 .then((response) => {
                     console.log(response);
                     // создание объекта пользователя для отправки
@@ -55,7 +55,7 @@ export default new Vuex.Store({
                         gender: userData.gender
                     };
                     // добавление данных пользователя в базу данных с использованием уникального id, полученного при регистрации
-                    database.patch('users/' + user.id + '.json' + '?auth=' + user.accessToken, user)
+                    database.patch('users/' + user.id + '.json' + '?auth=' + response.data.idToken, user)
                         .then((res) => {
                             console.log('Success. Adding new user id in database:', res);
                         })
@@ -63,12 +63,15 @@ export default new Vuex.Store({
                             console.log('Error. Adding new user id in database:', err)
                         });
                     console.log('New User:', user);
+                    user.accessToken = response.data.idToken;
                     // вызов мутации для объявления пользователя
                     commit('setUser', user);
+                    resolve();
                 }).catch((error) => {
                     console.log(error);
+                    reject();
                 });
-            console.log('SIGN_UP');
+            })
         },
 
         signIn({ commit }, { email, password }) {

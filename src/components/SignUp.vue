@@ -101,7 +101,21 @@
                 </div>
                 <div class="message error-message" v-if="!$v.user.gender.required && $v.user.gender.$dirty">Обязательное поле</div>
             </div>
-            <button class="submit-button">Зарегистрироваться</button>
+            <!-- Кнопка меняет свой текст и цвет в зависимости от состояния запроса. На 3 секунды после успешной регистрации или ошибки кнопка неактивна -->
+            <button 
+                class="submit-button"
+                :class="{
+                    submitted: requestState.submitted,
+                    error: requestState.error
+                }" 
+                :disabled="$v.$invalid || requestState.inProgress || requestState.submitted || requestState.error" 
+                @click.prevent="submit">
+                <span v-if="requestState.inProgress">Отправка...</span>
+                <span v-else-if="requestState.submitted">Готово</span>
+                <span v-else-if="requestState.error">Произошла ошибка</span>
+                <span v-else>Зарегистрироваться</span>
+            </button>
+            <p>{{$v}}</p>
         </div>
     </main>
 </template>
@@ -109,7 +123,7 @@
 <script>
     import { validationMixin } from 'vuelidate'
     import focus from '../directives/focus.js'
-    import { email, required, minLength, sameAs, alpha, minValue, maxValue, numeric } from 'vuelidate/lib/validators';
+    import { email, required, minLength, sameAs, minValue, maxValue, numeric } from 'vuelidate/lib/validators';
 
     export default {
         name: 'signUp',
@@ -125,9 +139,15 @@
                     age: null,
                     gender: ''
                 },
-                repeatPassword: ''
+                repeatPassword: '',
+                requestState: {
+                    inProgress: false,
+                    submitted: false,
+                    error: false
+                }
             };
         },
+        // валидация с помощью vuelidate
         validations: {
             repeatPassword: {
                 sameAsPassword: sameAs(function () { return this.user.password })
@@ -141,14 +161,8 @@
                     required,
                     minLength: minLength(6)
                 },
-                name: {
-                    required,
-                    alpha
-                },
-                surname: {
-                    required,
-                    alpha
-                },
+                name: { required },
+                surname: { required },
                 age: {
                     required,
                     minValue: minValue(1),
@@ -158,7 +172,32 @@
             }
         },
         methods: {
-
+            submit () {
+                // устанавливаем статус запрова "в процессе"
+                this.requestState.inProgress = true;
+                this.$store.dispatch('signUp', this.user).then(() => {
+                    // меняем статус запроса
+                    this.requestState.inProgress = false;
+                    this.requestState.submitted = true;
+                    // обнуляем поля
+                    this.user = {
+                        email: '',
+                        password: '',
+                        name: '',
+                        surname: '',
+                        age: null,
+                        gender: ''
+                    };
+                    // таймер для сброса состояния успешного запроса
+                    setTimeout(() => { this.requestState.submitted = false }, 3000);
+                }).catch(() => {
+                    // меняем статус запроса
+                    this.requestState.inProgress = false;
+                    this.requestState.error = true;                   
+                     // таймер для сброса состояния ошибки
+                    setTimeout(() => { this.requestState.error = false }, 3000);
+                });
+            }
         }
     };
 </script>
@@ -316,8 +355,27 @@
     }
 
     .submit-button:disabled {
+        cursor: default;
         background-color: #757575;
-        border: 1px solid #757575;
+        border-color: #757575;
         color: #fff;
+    }
+
+    .submit-button.submitted {
+        background-color: #4caf50 !important;
+        border-color: #4caf50 !important;
+    }
+
+    .submit-button.error {
+        background-color: #f44336 !important;
+        border-color: #f44336 !important;
+    }
+
+/* Анимация для изменения текста внутри кнопки */
+    .submit-button span {
+        -webkit-transition: all 0.1s ease;
+        -moz-transition: all 0.1s ease;
+        -o-transition: all 0.1s ease;
+        transition: all 0.1s ease;
     }
 </style>
