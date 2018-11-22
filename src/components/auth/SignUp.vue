@@ -109,11 +109,8 @@
                     error: requestState.error
                 }" 
                 :disabled="$v.$invalid || requestState.inProgress || requestState.submitted || requestState.error" 
-                @click.prevent="submit">
-                <span v-if="requestState.inProgress">Отправка...</span>
-                <span v-else-if="requestState.submitted">Готово</span>
-                <span v-else-if="requestState.error">Произошла ошибка</span>
-                <span v-else>Зарегистрироваться</span>
+                @click.prevent="submit()">
+                    <span>{{ buttonText }}</span>
             </button>
             <p>{{$v}}</p>
         </div>
@@ -122,7 +119,7 @@
 
 <script>
     import { validationMixin } from 'vuelidate'
-    import focus from '../directives/focus.js'
+    import focus from '../../directives/focus.js'
     import { email, required, minLength, sameAs, minValue, maxValue, numeric } from 'vuelidate/lib/validators';
 
     export default {
@@ -146,6 +143,20 @@
                     error: false
                 }
             };
+        },
+        // вычисляет текст кнопки по состоянию запроса
+        computed: {
+            buttonText () {
+                if (this.requestState.inProgress) {
+                    return 'Отправка...';
+                } if (this.requestState.submitted) {
+                    return 'Готово';
+                } if (this.requestState.error) {
+                    return 'Произошла ошибка';
+                } else {
+                    return 'Зарегистрироваться';
+                }
+            }
         },
         // валидация с помощью vuelidate
         validations: {
@@ -188,6 +199,8 @@
                         age: null,
                         gender: ''
                     };
+                    this.repeatPassword = '';
+                    this.$v.$reset();
                     // таймер для сброса состояния успешного запроса
                     setTimeout(() => { this.requestState.submitted = false }, 3000);
                 }).catch(() => {
@@ -204,35 +217,6 @@
 
 
 <style scoped>
-    .mdl-layout-content {
-        display: block;
-        margin: 1.5em auto;
-        height: 100%;
-    }
-
-    .form {
-        background-color: #fff;
-        min-width: 20em;
-        width: 80%;
-        max-width: 30em;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 2em;
-        margin-bottom: 4em;
-        padding: 1.5em;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    }
-
-    h3 {
-        text-align: center;
-    }
-
-    .deviding-line {
-        width: 100%;
-        height: 1px;
-        background-color: #757575;
-    }
-
     .info-note {
         font-size: 0.9em;
         line-height: 4em;
@@ -245,39 +229,10 @@
         color: #d50000;
     }
 
-    .form-group {
-        margin-bottom: 1.5em;
-    }
-
-    .form-group .title {
-        display: block;
-        margin-bottom: 0.5em;
-        font-size: 0.9em;
-        font-weight: 600;
-    }
-
     .form-group .title:after {
         content: "*";
         margin-left: 0.3em;
         color: #d50000;
-    }
-
-    .text-input {
-        outline: none;
-        width: 100%;
-        line-height: 2.5em;
-        padding-left: 0.7em;
-        padding-right: 0.7em;
-        font-size: 1.1em;
-        border: 1px solid #9a9a9a;
-        -webkit-transition: all 0.2s ease;
-        -moz-transition: all 0.2s ease;
-        -o-transition: all 0.2s ease;
-        transition: all 0.2s ease;
-    }
-
-    .text-input.invalid {
-        border-color: #d50000 !important;
     }
 
     /* Radio Input */
@@ -312,70 +267,7 @@
     }
 
     /* Message */
-    .message {
-        display: inline-block;
-        margin-top: 0.5em;
-        font-size: 0.9em;
-        -webkit-transition: all 0.3s ease;
-        -moz-transition: all 0.3s ease;
-        -o-transition: all 0.3s ease;
-        transition: all 0.3s ease;
-    }
-
     .info-message {
         color: #757575;
-    }
-
-    .error-message {
-        color: #d50000 !important;
-    }
-
-    /* Submit Button */
-    .submit-button {
-        margin-left: auto;
-        margin-right: auto;
-        display: block;
-        width: 100%;
-        min-width: 15em;
-        line-height: 3em;
-        font-size: 1.1em;
-        background-color: #fff;
-        border: 1px solid #2196f3;
-        color: #2196f3;
-        -webkit-transition: all 0.2s ease;
-        -moz-transition: all 0.2s ease;
-        -o-transition: all 0.2s ease;
-        transition: all 0.2s ease;
-    }
-
-    .submit-button:hover {
-        cursor: pointer;
-        background-color: #2196f3;
-        color: #fff;
-    }
-
-    .submit-button:disabled {
-        cursor: default;
-        background-color: #757575;
-        border-color: #757575;
-        color: #fff;
-    }
-
-    .submit-button.submitted {
-        background-color: #4caf50 !important;
-        border-color: #4caf50 !important;
-    }
-
-    .submit-button.error {
-        background-color: #f44336 !important;
-        border-color: #f44336 !important;
-    }
-
-/* Анимация для изменения текста внутри кнопки */
-    .submit-button span {
-        -webkit-transition: all 0.1s ease;
-        -moz-transition: all 0.1s ease;
-        -o-transition: all 0.1s ease;
-        transition: all 0.1s ease;
     }
 </style>
