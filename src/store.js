@@ -42,7 +42,8 @@ export default new Vuex.Store({
     actions: {
         signUp({ commit }, userData) {
             // регистрация нового пользователя
-            return new Promise ((resolve, reject) => {authentication.post('signupNewUser?key=' + API_KEY, { email: userData.email, password: userData.password, returnSecureToken: true })
+            return new Promise ((resolve, reject) => { 
+                authentication.post('signupNewUser?key=' + API_KEY, { email: userData.email, password: userData.password, returnSecureToken: true })
                 .then((response) => {
                     console.log(response);
                     // создание объекта пользователя для отправки
@@ -76,7 +77,8 @@ export default new Vuex.Store({
 
         signIn({ commit }, { email, password }) {
             // авторизация пользователя по логину и паролю
-            authentication.post('verifyPassword?key=' + API_KEY, { email, password, returnSecureToken: true })
+            return new Promise ((resolve, reject) => {
+                authentication.post('verifyPassword?key=' + API_KEY, { email, password, returnSecureToken: true })
                 .then((response) => {
                     console.log(response);
                     const user = {
@@ -98,11 +100,12 @@ export default new Vuex.Store({
                     // вызов мутации для объявления пользователя
                     console.log('User:', user);
                     commit('setUser', user);
+                    resolve();
                 }).catch((error) => {
                     console.log(error);
+                    reject();
                 });
-
-            console.log("SIGN_IN");
+            })
         },
 
     }

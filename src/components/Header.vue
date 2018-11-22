@@ -7,8 +7,8 @@
             <div class="mdl-layout-spacer"></div>
             <!-- Navigation. We hide it in small screens. -->
             <nav class="mdl-navigation mdl-layout--large-screen-only">
-                <router-link class="mdl-navigation__link" to="signIn">Войти</router-link>
-                <router-link class="mdl-navigation__link" to="signUp">Зарегистрироваться</router-link>
+                <router-link class="mdl-navigation__link" to="signin">Войти</router-link>
+                <router-link class="mdl-navigation__link" to="signup">Зарегистрироваться</router-link>
             </nav>
             <nav class="mdl-navigation mdl-layout--large-screen-only">
                 <router-link class="mdl-navigation__link" to="profile">Профиль</router-link>
