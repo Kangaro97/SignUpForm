@@ -21,7 +21,6 @@ export default new Vuex.Store({
     },
     getters: {
         getUserData: (state) => {
-            console.log('GetUserData', state.user)
             return {
                 email: state.user.email,
                 name: state.user.name,
@@ -38,7 +37,6 @@ export default new Vuex.Store({
         // объявление пользователя при входе/регистрации
         setUser(state, user) {
             state.user = user;
-            console.log('Set user', state.user);
         },
         // сброс пользователя
         clearUser (state) {
@@ -57,19 +55,16 @@ export default new Vuex.Store({
         // выход из профиля
         logout ({ commit }) {
             commit('clearUser');
-            console.log("LOGOUT");
         },
         // таймер автоматического выхода
         setLogoutTimer ({ dispatch }, sessionTime) {
             setTimeout(() => { dispatch('logout'); }, sessionTime * 1000);
-            console.log("SET_TOKEN_LOGOUT_TIMER");
         },
         signUp ({ commit, dispatch }, userData) {
             // регистрация нового пользователя
             return new Promise ((resolve, reject) => { 
                 authentication.post('signupNewUser?key=' + API_KEY, { email: userData.email, password: userData.password, returnSecureToken: true })
                 .then((response) => {
-                    console.log(response);
                     // создание объекта пользователя для отправки
                     const user = {
                         id: response.data.localId,
@@ -81,20 +76,18 @@ export default new Vuex.Store({
                     };
                     // добавление данных пользователя в базу данных с использованием уникального id, полученного при регистрации
                     database.patch('users/' + user.id + '.json' + '?auth=' + response.data.idToken, user)
-                        .then((res) => {
-                            console.log('Success. Adding new user id in database:', res);
+                        .then(() => {
+                            user.accessToken = response.data.idToken;
+                            // вызов мутации для объявления пользователя
+                            dispatch('setLogoutTimer', response.data.expiresIn);
+                            commit('setUser', user);
+                            resolve();
                         })
-                        .catch((err) => {
-                            console.log('Error. Adding new user id in database:', err)
+                        .catch(() => {
+                            reject();
                         });
-                    console.log('New User:', user);
-                    user.accessToken = response.data.idToken;
-                    // вызов мутации для объявления пользователя
-                    dispatch('setLogoutTimer', response.data.expiresIn);
-                    commit('setUser', user);
-                    resolve();
+
                 }).catch((error) => {
-                    console.log(error);
                     reject();
                 });
             })
@@ -105,7 +98,6 @@ export default new Vuex.Store({
             return new Promise ((resolve, reject) => {
                 authentication.post('verifyPassword?key=' + API_KEY, { email, password, returnSecureToken: true })
                 .then((response) => {
-                    console.log(response);
                     const user = {
                         id: response.data.localId,
                         email: response.data.email,
@@ -113,8 +105,7 @@ export default new Vuex.Store({
                     };
                     // получение данных пользователя из базы данных
                     database.get('users/' + user.id + '.json' + '?auth=' + user.accessToken)
-                        .then((res) => {
-                            console.log(res);
+                        .then(() => {
                             user.name = res.data.name;
                             user.surname = res.data.surname;
                             user.age = res.data.age;
@@ -122,17 +113,14 @@ export default new Vuex.Store({
 
                             // вызов мутации для объявления пользователя
                             commit('setUser', user);
-                            console.log('User:', user);   
                             // установка таймера автовыхода                 
                             dispatch('setLogoutTimer', response.data.expiresIn);
                             resolve();
-                        }).catch((err) => {
-                            console.log(err);
+                        }).catch(() => {
                             reject();
                         });
 
-                }).catch((error) => {
-                    console.log(error);
+                }).catch(() => {
                     reject();
                 });
             })
