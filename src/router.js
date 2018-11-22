@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store'
 
-import Home from './views/Home.vue'
+import Home from './components/home/Home.vue'
 import SignUp from './components/auth/SignUp.vue'
 import SignIn from './components/auth/SignIn.vue'
-import Profile from './components/Profile.vue'
+import Profile from './components/profile/Profile.vue'
 
 Vue.use(Router)
 
@@ -26,7 +27,14 @@ export default new Router({
     },
     {
       path: '/profile',
-      component: Profile
+      component: Profile,
+      beforeEnter (to, from, next) {
+        if (store.getters.authState) {
+          next();
+        } else {
+          next('signin')
+        }
+      }
     },
   ]
 })

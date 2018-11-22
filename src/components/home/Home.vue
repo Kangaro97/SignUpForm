@@ -1,5 +1,5 @@
 <template>
-    <main class="mdl-layout__content">
+    <main class="main-content">
         <h3>Главная страница</h3>
     </main>
 </template>

@@ -1,5 +1,5 @@
 <template>
-    <div class="mdl-layout mdl-layout--fixed-header">
+    <div class="app-container">
         <!-- Header -->
         <app-header></app-header>
         <!-- Main part -->
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import Header from "@/components/Header.vue"
+    import Header from "@/components/header/Header.vue"
 
     export default {
         components: {
@@ -31,13 +31,20 @@
     html,
     body {
         overflow: hidden;
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Arial', sans-serif;
         font-size: 15px;
         background-color: #f7f7f7;
         height: 100%;
     }
 
-    .mdl-layout-content {
+    .app-container {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .main-content {
         display: block;
         margin: 1.5em auto;
         height: 100%;
@@ -53,26 +60,26 @@
         margin-top: 2em;
         margin-bottom: 4em;
         padding: 1.5em;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12)
     }
 
-    h3 {
+    .form .main-title {
         margin-top: 0.3em;
         margin-bottom: 0.3em;
         text-align: center;
     }
 
-    .deviding-line {
+    .dividing-line {
         width: 100%;
         height: 1px;
         background-color: #757575;
     }
 
-    .form-group {
-        margin-bottom: 1.5em;
+    .form .form-group {
+        min-height: 8em;
     }
 
-    .form-group .title {
+    .form .form-group .title {
         display: block;
         margin-bottom: 0.5em;
         font-size: 0.9em;

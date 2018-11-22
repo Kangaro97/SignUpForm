@@ -1,8 +1,8 @@
 <template>
-    <main class="mdl-layout__content">
+    <main class="main-content">
         <div class="form">
-            <h3>Регистрация</h3>
-            <div class="deviding-line"></div>
+            <h3 class="main-title">Регистрация</h3>
+            <div class="dividing-line"></div>
             <!-- уточнение для лучшего понимания -->
             <div class="info-note">Обязательные поля</div> 
             <!-- Электронная почта с директивой автофокуса -->
@@ -112,7 +112,6 @@
                 @click.prevent="submit()">
                     <span>{{ buttonText }}</span>
             </button>
-            <p>{{$v}}</p>
         </div>
     </main>
 </template>
@@ -201,6 +200,7 @@
                     };
                     this.repeatPassword = '';
                     this.$v.$reset();
+                    this.$router.push({ path: '/profile' });
                     // таймер для сброса состояния успешного запроса
                     setTimeout(() => { this.requestState.submitted = false }, 3000);
                 }).catch(() => {

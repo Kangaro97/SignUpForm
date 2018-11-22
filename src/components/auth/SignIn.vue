@@ -1,10 +1,10 @@
 <template>
-    <main class="mdl-layout__content">
+    <main class="main-content">
         <div class="form">
-            <h3>Вход</h3>
-            <div class="deviding-line"></div>
+            <h3 class="main-title">Вход</h3>
+            <div class="dividing-line"></div>
             <!-- Электронная почта с валидацией и автофокусом-->
-            <div class="form-group">
+            <div class="form-group form-group__login">
                 <label for="email-input" class="title">Электронная почта</label>
                 <input 
                         class="text-input" 
@@ -12,9 +12,9 @@
                         id="email-input" 
                         type="text" 
                         placeholder="email@email.com"
-                        v-model.trim.lazy="$v.email.$model"
+                        v-model.trim="$v.email.$model"
                         v-focus>
-                <div class="message error-message" v-if="!$v.email.email">Почта введена неправильно. Пожалуйста, повторите ввод.</div>
+                <div class="message error-message" v-if="!$v.email.email">Почта введена неправильно.</div>
                 <div class="message error-message" v-if="!$v.email.required && $v.email.$dirty">Обязательное поле.</div>
             </div>
             <!-- Пароль -->
@@ -94,12 +94,13 @@
             login () {
                 // устанавливаем статус запрова "в процессе"
                 this.requestState.inProgress = true;
-                this.$store.dispatch('signIn', { email: this.email, password: this.password}).then(() => {
-                    this.$router.push('profile');
-                }).catch(() => {
+                this.$store.dispatch('signIn', { email: this.email, password: this.password }).then(() => {
                     // меняем статус запроса
                     this.requestState.inProgress = false;
                     this.requestState.error = true;
+                    // перенаправляев в профиль
+                    this.$router.push('/profile');
+                }).catch(() => {
                     //сбрасываем поля
                     this.email = '';
                     this.password = '';
@@ -112,8 +113,12 @@
     };
 </script>
 
-<style sscoped>
-    .form-group .title {
+<style scoped>
+    .form-group__login {
+        min-height: 6.6em;
+    }
+
+    .form-group__login .title {
         margin-top: 1.5em;
     }
 </style>
