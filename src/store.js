@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { API_KEY, authInstance as authentication, databaseInstance as database } from './http/api.js'
-import { stat } from 'fs';
-
 
 Vue.use(Vuex)
 

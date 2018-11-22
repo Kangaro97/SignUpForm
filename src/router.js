@@ -10,31 +10,31 @@ import Profile from './components/profile/Profile.vue'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      component: Home
-    },
-    {
-      path: '/signup',
-      component: SignUp
-    },
-    {
-      path: '/signin',
-      component: SignIn
-    },
-    {
-      path: '/profile',
-      component: Profile,
-      beforeEnter (to, from, next) {
-        if (store.getters.authState) {
-          next();
-        } else {
-          next('signin')
-        }
-      }
-    },
-  ]
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes: [
+        {
+            path: '/',
+            component: Home
+        },
+        {
+            path: '/signup',
+            component: SignUp
+        },
+        {
+            path: '/signin',
+            component: SignIn
+        },
+        {
+            path: '/profile',
+            component: Profile,
+            beforeEnter(to, from, next) {
+                if (store.getters.authState) {
+                    next();
+                } else {
+                    next('signin')
+                }
+            }
+        },
+    ]
 })
