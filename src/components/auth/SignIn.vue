@@ -1,7 +1,7 @@
 <template>
     <main class="main-content">
         <div class="form">
-            <h3 class="main-title">Вход</h3>
+            <h2 class="main-title">Вход</h2>
             <div class="dividing-line"></div>
             <!-- Электронная почта с валидацией и автофокусом-->
             <div class="form-group form-group__login">

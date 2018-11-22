@@ -30,11 +30,12 @@
 
     html,
     body {
+        height: 100%;
         overflow: hidden;
         font-family: 'Arial', sans-serif;
         font-size: 15px;
         background-color: #f7f7f7;
-        height: 100%;
+        color: #5a5a5a;
     }
 
     .app-container {

@@ -1,7 +1,7 @@
 <template>
     <main class="main-content">
         <div class="profile-container">
-            <h3 class="main-title">Профиль</h3>
+            <h2 class="main-title">Профиль</h2>
             <div class="dividing-line"></div>
             <!-- Поле с именем и фамилией -->
             <div class="form-group form-group__name">

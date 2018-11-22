@@ -1,7 +1,7 @@
 <template>
     <main class="main-content">
         <div class="form">
-            <h3 class="main-title">Регистрация</h3>
+            <h2 class="main-title">Регистрация</h2>
             <div class="dividing-line"></div>
             <!-- уточнение для лучшего понимания -->
             <div class="info-note">Обязательные поля</div> 
